@@ -22,6 +22,12 @@ sub emit_chunks {
     return join('', map { $self->format($_) } @contents );
 }
 
+sub emit_expressions {
+    my ( $self, @contents ) = @_;
+
+    return join(' ', map { $self->format($_) } @contents );
+}
+
 sub emit_statements {
     my ( $self, @contents ) = @_;
 
