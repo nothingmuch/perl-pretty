@@ -28,7 +28,8 @@ my %id = (
 
 foreach my $key ( keys %id ) {
     my $id = $id{$key};
-    is_deeply( $c->compose($id), $id, "'$key' composes to itself" );
+    use Data::Dumper;
+    is_deeply( $c->compose($id), $id, "'$key' composes to itself" ) or die Dumper($id, $c->compose($id))
 }
 
 my %simplify = (

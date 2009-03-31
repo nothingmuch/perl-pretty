@@ -1,23 +1,22 @@
 package Perl::Pretty::Placeholder;
-use Moose;
 
-use namespace::clean -except => 'meta';
+use namespace::clean;
 
-extends qw(Perl::Pretty::Node);
+use parent qw(Perl::Pretty::Node);
 
-has name => (
-    isa      => "Str",
-    is       => "ro",
-    required => 1,
-);
+sub new {
+    my ( $class, %args ) = @_;
+
+    bless { name => ( $args{name} || die "name is required" ) }, $class;
+}
+
+sub name { $_[0]{name} }
 
 sub compose {
     my ( $self, $c ) = @_;
 
     $c->resolve($self);
 }
-
-__PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
 

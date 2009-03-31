@@ -1,20 +1,24 @@
 package Perl::Pretty::Unit;
-use Moose;
 
-use namespace::clean -except => 'meta';
+use namespace::clean;
 
-extends qw(Perl::Pretty::Node);
+use parent qw(Perl::Pretty::Node);
 
-has node => (
-    isa => "Perl::Pretty::Node",
-    is  => "ro",
-);
+sub new {
+    my ( $class, %args ) = @_;
 
-has [qw(requires provides)] => (
-    isa     => "ArrayRef[Str]",
-    is      => "ro",
-    default => sub { [] },
-);
+    bless {
+        node     => ( $args{node}     || die "node is required" ),
+        requires => ( $args{requires} || [] ),
+        provides => ( $args{provides} || [] ),
+    }, $class;
+}
+
+sub node { $_[0]{node} }
+
+sub requires { $_[0]{requires} }
+
+sub provides { $_[0]{provides} }
 
 sub compose {
     my ( $self, $c ) = @_;
@@ -30,8 +34,6 @@ sub format {
 
     $self->node->format($formatter);
 }
-
-__PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
 

@@ -1,17 +1,14 @@
 package Perl::Pretty::List;
-use Moose;
 
-use namespace::clean -except => 'meta';
+use namespace::clean;
 
-extends qw(Perl::Pretty::Snippet);
+use parent qw(Perl::Pretty::Snippet);
 
 sub format {
     my ( $self, $formatter ) = @_;
 
     $formatter->emit_list(@{ $self->parts });
 }
-
-__PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
 

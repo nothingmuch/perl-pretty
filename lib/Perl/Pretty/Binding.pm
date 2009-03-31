@@ -1,27 +1,27 @@
 package Perl::Pretty::Binding;
-use Moose;
 
-use namespace::clean -except => 'meta';
+use namespace::clean;
 
-extends qw(Perl::Pretty::Node);
+use parent qw(Perl::Pretty::Node);
 
-has node => (
-	isa => "Perl::Pretty::Node",
-	is  => "ro",
-);
+sub new {
+    my ( $class, %args ) = @_;
 
-has bindings => (
-    isa => "HashRef",
-    is  => "ro",
-);
+    bless {
+        node     => ( $args{node}     || die "node is required" ),
+        bindings => ( $args{bindings} || {} ),
+    }, $class;
+}
+
+sub node { $_[0]{node} }
+
+sub bindings { $_[0]{bindings} }
 
 sub compose {
     my ( $self, $c ) = @_;
 
     $c->bind( $self->node, %{ $self->bindings } );
 }
-
-__PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
 

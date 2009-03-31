@@ -1,15 +1,18 @@
 package Perl::Pretty::Snippet;
-use Moose;
 
-use namespace::clean -except => 'meta';
+use namespace::clean;
 
-extends qw(Perl::Pretty::Node);
+use parent qw(Perl::Pretty::Node);
 
-has parts => (
-    isa      => "ArrayRef[Perl::Pretty::Node|Str]",
-    is       => "ro",
-    required => 1,
-);
+sub new {
+    my ( $class, %args ) = @_;
+
+    bless {
+        parts => $args{parts} || die "parts is required",
+    }, $class;
+}
+
+sub parts { $_[0]{parts} }
 
 sub compose {
     my ( $self, @args ) = @_;
@@ -24,8 +27,6 @@ sub format {
 
     $formatter->emit_chunks(@{ $self->parts });
 }
-
-__PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
 

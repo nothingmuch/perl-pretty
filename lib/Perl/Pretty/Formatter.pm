@@ -1,7 +1,10 @@
 package Perl::Pretty::Formatter;
-use Moose;
 
-use namespace::clean -except => 'meta';
+use namespace::clean;
+
+sub new {
+    bless {}, shift;
+}
 
 sub format {
     my ( $self, $node ) = @_;
@@ -36,8 +39,6 @@ sub emit_list {
 
     return '(' . join(', ', map { $self->emit_chunks($_) } @contents) . ')'; # FIXME limit to 80 chars?
 }
-
-__PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
 

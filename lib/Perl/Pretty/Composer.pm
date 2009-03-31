@@ -1,11 +1,14 @@
 package Perl::Pretty::Composer;
-use Moose;
 
 use Carp qw(croak);
 
 use Scope::Guard;
 
-use namespace::clean -except => 'meta';
+use namespace::clean;
+
+sub new {
+    bless {}, shift;
+}
 
 sub compose {
     my ( $self, $node ) = @_;
@@ -13,11 +16,9 @@ sub compose {
     $self->bind($node);
 }
 
-has [qw(bindings requires provides)] => (
-    isa     => "ArrayRef",
-    is      => "ro",
-    default => sub { [] },
-);
+sub bindings { $_[0]{bindings} ||= [] }
+sub requires { $_[0]{requires} ||= [] }
+sub provides { $_[0]{provides} ||= [] }
 
 sub bind {
     my ( $self, $node, %bindings ) = @_;
@@ -69,8 +70,6 @@ sub resolve {
 
     $node->compose($self);
 }
-
-__PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
 
