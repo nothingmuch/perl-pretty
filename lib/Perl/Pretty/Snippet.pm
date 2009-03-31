@@ -19,6 +19,12 @@ sub compose {
 	);
 }
 
+sub format {
+    my ( $self, $formatter ) = @_;
+
+    $formatter->emit_chunks(@{ $self->parts });
+}
+
 __PACKAGE__->meta->make_immutable;
 
 __PACKAGE__

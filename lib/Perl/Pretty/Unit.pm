@@ -25,6 +25,12 @@ sub compose {
     $self->node->compose($c);
 }
 
+sub format {
+    my ( $self, $formatter ) = @_;
+
+    $self->node->format($formatter);
+}
+
 __PACKAGE__->meta->make_immutable;
 
 __PACKAGE__
