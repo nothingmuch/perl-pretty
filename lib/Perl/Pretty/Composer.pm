@@ -13,7 +13,11 @@ sub new {
 sub compose {
     my ( $self, $node ) = @_;
 
-    $self->bind($node);
+    if ( ref $node ) {
+        return $self->bind($node);
+    } else {
+        return $node;
+    }
 }
 
 sub bindings { $_[0]{bindings} ||= [] }

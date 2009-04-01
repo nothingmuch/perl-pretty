@@ -14,6 +14,8 @@ use ok 'Perl::Pretty::Composer';
 
 my $c = Perl::Pretty::Composer->new;
 
+is( $c->compose("foo"), "foo", "strings pass through" );
+
 my %id = (
     unary  => Perl::Pretty::Chunk->new( parts => ["foo"] ),
     binary => Perl::Pretty::Chunk->new( parts => [qw(foo bar)] ),

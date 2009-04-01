@@ -15,6 +15,8 @@ use ok 'Perl::Pretty::Formatter';
 
 my $f = Perl::Pretty::Formatter->new;
 
+is( $f->format("foo"), "foo", "strings pass through" );
+
 is( $f->format(Perl::Pretty::Chunk->new( parts => [qw(foo bar)] )), "foobar", "format simple snippet" );
 
 is( $f->format(Perl::Pretty::Unit->new( node => Perl::Pretty::Chunk->new( parts => [qw(foo bar)] ) )), "foobar", "format simple unit" );
