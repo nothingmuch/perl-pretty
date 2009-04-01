@@ -1,4 +1,4 @@
-package Perl::Pretty::Snippet;
+package Perl::Pretty::Chunk;
 
 use namespace::clean;
 

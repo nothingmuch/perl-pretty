@@ -2,7 +2,7 @@ package Perl::Pretty::Block;
 
 use namespace::clean;
 
-use parent qw(Perl::Pretty::Snippet);
+use parent qw(Perl::Pretty::Chunk);
 
 sub format {
     my ( $self, $formatter ) = @_;

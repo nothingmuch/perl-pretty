@@ -8,21 +8,21 @@ use Test::More 'no_plan';
 use ok 'Perl::Pretty::Unit';
 use ok 'Perl::Pretty::Binding';
 use ok 'Perl::Pretty::Placeholder';
-use ok 'Perl::Pretty::Snippet';
+use ok 'Perl::Pretty::Chunk';
 
 use ok 'Perl::Pretty::Composer';
 
 my $c = Perl::Pretty::Composer->new;
 
 my %id = (
-    unary  => Perl::Pretty::Snippet->new( parts => ["foo"] ),
-    binary => Perl::Pretty::Snippet->new( parts => [qw(foo bar)] ),
-    nested => Perl::Pretty::Snippet->new(
-        parts => [ Perl::Pretty::Snippet->new( parts => ["blah"] ) ]
+    unary  => Perl::Pretty::Chunk->new( parts => ["foo"] ),
+    binary => Perl::Pretty::Chunk->new( parts => [qw(foo bar)] ),
+    nested => Perl::Pretty::Chunk->new(
+        parts => [ Perl::Pretty::Chunk->new( parts => ["blah"] ) ]
     ),
     unit => Perl::Pretty::Unit->new(
         requires => [qw($blah)],
-        node     => Perl::Pretty::Snippet->new( parts => ["foo"] )
+        node     => Perl::Pretty::Chunk->new( parts => ["foo"] )
     ),
 );
 
@@ -34,52 +34,52 @@ foreach my $key ( keys %id ) {
 
 my %simplify = (
     inner_unit => {
-        from => Perl::Pretty::Snippet->new(
+        from => Perl::Pretty::Chunk->new(
             parts => [
                 Perl::Pretty::Unit->new(
                     requires => [qw($blah)],
-                    node     => Perl::Pretty::Snippet->new( parts => ["foo"] )
+                    node     => Perl::Pretty::Chunk->new( parts => ["foo"] )
                 )
             ]
         ),
         to => Perl::Pretty::Unit->new(
             requires => [qw($blah)],
-            node     => Perl::Pretty::Snippet->new(
-                parts => [ Perl::Pretty::Snippet->new( parts => ["foo"] ) ]
+            node     => Perl::Pretty::Chunk->new(
+                parts => [ Perl::Pretty::Chunk->new( parts => ["foo"] ) ]
             )
         ),
     },
     useless_unit => {
         from => Perl::Pretty::Unit->new(
-            node => Perl::Pretty::Snippet->new( parts => [qw(foo)] )
+            node => Perl::Pretty::Chunk->new( parts => [qw(foo)] )
         ),
-        to => Perl::Pretty::Snippet->new( parts => [qw(foo)] ),
+        to => Perl::Pretty::Chunk->new( parts => [qw(foo)] ),
     },
     nested_inner_unit => {
         from => Perl::Pretty::Unit->new(
-            node => Perl::Pretty::Snippet->new(
+            node => Perl::Pretty::Chunk->new(
                 parts => [
                     Perl::Pretty::Unit->new(
                         requires => [qw($blah)],
-                        node => Perl::Pretty::Snippet->new( parts => ["foo"] )
+                        node => Perl::Pretty::Chunk->new( parts => ["foo"] )
                     ),
                 ],
             ),
         ),
         to => Perl::Pretty::Unit->new(
             requires => [qw($blah)],
-            node     => Perl::Pretty::Snippet->new(
-                parts => [ Perl::Pretty::Snippet->new( parts => ["foo"] ), ],
+            node     => Perl::Pretty::Chunk->new(
+                parts => [ Perl::Pretty::Chunk->new( parts => ["foo"] ), ],
             ),
         ),
     },
     nested_useless_unit => {
         from => Perl::Pretty::Unit->new(
             node => Perl::Pretty::Unit->new(
-                node => Perl::Pretty::Snippet->new( parts => [qw(foo)] )
+                node => Perl::Pretty::Chunk->new( parts => [qw(foo)] )
             )
         ),
-        to => Perl::Pretty::Snippet->new( parts => [qw(foo)] ),
+        to => Perl::Pretty::Chunk->new( parts => [qw(foo)] ),
     },
 );
 
@@ -93,15 +93,15 @@ my %binding = (
         from => Perl::Pretty::Binding->new(
             node => Perl::Pretty::Placeholder->new( name => "foo", ),
             bindings =>
-              { foo => Perl::Pretty::Snippet->new( parts => [qw(foo)] ), },
+              { foo => Perl::Pretty::Chunk->new( parts => [qw(foo)] ), },
         ),
-        to => Perl::Pretty::Snippet->new( parts => [qw(foo)] ),
+        to => Perl::Pretty::Chunk->new( parts => [qw(foo)] ),
     },
     complex_binding => {
         from => Perl::Pretty::Binding->new(
             node => Perl::Pretty::Unit->new(
                 provides => [qw($foo)],
-                node     => Perl::Pretty::Snippet->new(
+                node     => Perl::Pretty::Chunk->new(
                     parts => [
                         "foo", Perl::Pretty::Placeholder->new( name => "foo" ),
                     ],
@@ -110,15 +110,15 @@ my %binding = (
             bindings => {
                 foo => Perl::Pretty::Unit->new(
                     requires => [qw($foo)],
-                    node => Perl::Pretty::Snippet->new( parts => [qw(bar)] ),
+                    node => Perl::Pretty::Chunk->new( parts => [qw(bar)] ),
                 ),
             },
         ),
         to => Perl::Pretty::Unit->new(
             provides => [qw($foo)],
-            node     => Perl::Pretty::Snippet->new(
+            node     => Perl::Pretty::Chunk->new(
                 parts =>
-                  [ "foo", Perl::Pretty::Snippet->new( parts => [qw(bar)] ), ]
+                  [ "foo", Perl::Pretty::Chunk->new( parts => [qw(bar)] ), ]
             )
         ),
     },
@@ -126,7 +126,7 @@ my %binding = (
         from => Perl::Pretty::Binding->new(
             node => Perl::Pretty::Unit->new(
                 provides => [qw($foo)],
-                node     => Perl::Pretty::Snippet->new(
+                node     => Perl::Pretty::Chunk->new(
                     parts => [
                         "foo", Perl::Pretty::Placeholder->new( name => "foo" ),
                     ],
@@ -135,16 +135,16 @@ my %binding = (
             bindings => {
                 foo => Perl::Pretty::Unit->new(
                     requires => [qw($bar)],
-                    node => Perl::Pretty::Snippet->new( parts => [qw(bar)] ),
+                    node => Perl::Pretty::Chunk->new( parts => [qw(bar)] ),
                 ),
             },
         ),
         to => Perl::Pretty::Unit->new(
             provides => [qw($foo)],
             requires => [qw($bar)],
-            node     => Perl::Pretty::Snippet->new(
+            node     => Perl::Pretty::Chunk->new(
                 parts =>
-                  [ "foo", Perl::Pretty::Snippet->new( parts => [qw(bar)] ), ]
+                  [ "foo", Perl::Pretty::Chunk->new( parts => [qw(bar)] ), ]
             ),
         ),
     },
