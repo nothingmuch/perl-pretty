@@ -9,6 +9,7 @@ use ok 'Perl::Pretty::Unit';
 use ok 'Perl::Pretty::Chunk';
 use ok 'Perl::Pretty::Block';
 use ok 'Perl::Pretty::List';
+use ok 'Perl::Pretty::Expression';
 use ok 'Perl::Pretty::Statement';
 
 use ok 'Perl::Pretty::Formatter';
@@ -23,7 +24,9 @@ is( $f->format(Perl::Pretty::Unit->new( node => Perl::Pretty::Chunk->new( parts 
 
 like( $f->format(Perl::Pretty::List->new( parts => [qw(foo bar)] )), qr/\(\s*foo\s*,\s*bar\s*\)/s, "format simple list" );
 
-like( $f->format(Perl::Pretty::Block->new( parts => [qw(foo bar)] )), qr/\{\s*foo\s*;\s*bar\s*\}/s, "format simple block" );
+like( $f->format(Perl::Pretty::Block->new( parts => [map { Perl::Pretty::Statement->new(parts => [ $_ ]) } qw(foo bar)] )), qr/\{\s*foo\s*;\s*bar\s*;\s*\}/s, "format simple block" );
 
-like( $f->format(Perl::Pretty::Statement->new( parts => [qw(foo bar)] )), qr/foo\s+bar/s, "format statement" );
+like( $f->format(Perl::Pretty::Expression->new( parts => [qw(foo bar)] )), qr/foo\s+bar/s, "format expressions" );
+
+like( $f->format(Perl::Pretty::Statement->new( parts => [qw(foo bar)] )), qr/foo\s+bar;/s, "format statement" );
 

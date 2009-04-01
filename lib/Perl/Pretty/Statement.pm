@@ -2,12 +2,12 @@ package Perl::Pretty::Statement;
 
 use namespace::clean;
 
-use parent qw(Perl::Pretty::Chunk);
+use parent qw(Perl::Pretty::Expression);
 
 sub format {
-    my ( $self, $formatter ) = @_;
+    my ( $self, @args ) = @_;
 
-    $formatter->emit_expressions(@{ $self->parts });
+    $self->SUPER::format(@args) . ';';
 }
 
 __PACKAGE__

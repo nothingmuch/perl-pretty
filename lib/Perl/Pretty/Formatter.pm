@@ -28,16 +28,16 @@ sub emit_expressions {
     return join(' ', map { $self->format($_) } @contents );
 }
 
-sub emit_statements {
+sub emit_lines {
     my ( $self, @contents ) = @_;
 
-    return join(';', map { $self->format($_) } @contents); # FIXME indent
+    return join('', map { $self->format($_) } @contents); # FIXME indent, newlines
 }
 
 sub emit_block {
     my ( $self, @contents ) = @_;
 
-    return '{' . $self->emit_statements(@contents) . '}'; # FIXME increase indent locally
+    return '{' . $self->emit_lines(@contents) . '}'; # FIXME increase indent locally
 }
 
 sub emit_list {
