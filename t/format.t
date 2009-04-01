@@ -11,6 +11,7 @@ use ok 'Perl::Pretty::Block';
 use ok 'Perl::Pretty::List';
 use ok 'Perl::Pretty::Expression';
 use ok 'Perl::Pretty::Statement';
+use ok 'Perl::Pretty::Compound';
 
 use ok 'Perl::Pretty::Formatter';
 
@@ -30,3 +31,6 @@ like( $f->format(Perl::Pretty::Expression->new( parts => [qw(foo bar)] )), qr/fo
 
 like( $f->format(Perl::Pretty::Statement->new( parts => [qw(foo bar)] )), qr/foo\s+bar;/s, "format statement" );
 
+is( $f->format(Perl::Pretty::Compound->new( statement => "if (foo)", block => "{ blah }" ) ), 'if (foo) { blah }', "compound statement with strings" );
+
+like( $f->format(Perl::Pretty::Compound->new( statement => Perl::Pretty::Expression->new( parts => [ 'if', '(foo)' ] ), block => Perl::Pretty::Block->new( parts => [ Perl::Pretty::Statement->new( parts => [ "blah" ] ) ] ) ) ), qr/if\s*\(\s*foo\s*\)\s*{\s*blah;\s*}/s, "compound statement with strings" );
